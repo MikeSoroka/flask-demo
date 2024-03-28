@@ -6,7 +6,7 @@ class user():
     @staticmethod
     def get(db_connection, amount = "*"):
         users = db_connection.execute('SELECT ? FROM posts',
-                                      (int(amount))).fetchall()
+                                      (str(amount))).fetchall()
         return users
 
 
