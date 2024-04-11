@@ -12,8 +12,13 @@ class DB_class(metaclass=Meta):
                               (DB_class.table_name, str(DB_class.attributes), str(tuple(all_attributes))))
 
     @classmethod
-    def select(cls, db_connection, amount="*"):
-        users = db_connection.execute('SELECT * FROM USERS')
+    def select(cls, db_connection, amount=None):
+        query = f"SELECT * FROM '{cls.table_name}'"
+        if amount is not None:
+            query += " LIMIT ?"
+            users = db_connection.execute(query, (amount,))
+        else:
+            users = db_connection.execute(query)
         return users.fetchall()
 """
     @staticmethod

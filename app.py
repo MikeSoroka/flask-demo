@@ -16,7 +16,6 @@ def index():
 @app.route('/users')
 def users():
     connection = get_db_connection()
-    users = user.select(connection, 1)
-    print(users[1].keys())
+    users = user.select(connection)
     return render_template('users.html', users=users)
 
