@@ -9,13 +9,27 @@ def get_db_connection(db = 'database.db'):
 
 app = Flask(__name__)
 
+
+@app.template_filter('table_name')
+def getTableName(myClass):
+    return myClass.table_name
+
+@app.template_filter('get_attributes')
+def getAttributes(myClass):
+    return myClass.attributes
+
+@app.template_filter('get_id')
+def getID(myClass):
+    return myClass.id
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route('/users')
 def users():
+    print(User.attributes)
     connection = get_db_connection()
-    users = user.select(connection)
-    return render_template('users.html', users=users)
+    users = User.select(connection)
+    return render_template('table.html', rows=users, table_class=User)
 

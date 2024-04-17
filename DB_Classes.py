@@ -7,9 +7,9 @@ class DB_class(metaclass=Meta):
     id = "id"
     attributes = ()
     @classmethod
-    def push(DB_connection, **all_attributes):
-        DB_connection.execute('INSERT INTO ? ? VALUES ?',
-                              (DB_class.table_name, str(DB_class.attributes), str(tuple(all_attributes))))
+    def push(cls, DB_connection, **all_attributes):
+        DB_connection.execute(f"INSERT INTO {cls.table_name} {str(cls.attributes)} VALUES ?",
+                              (str(tuple(all_attributes))))
 
     @classmethod
     def select(cls, db_connection, amount=None):
@@ -35,11 +35,8 @@ class DB_class(metaclass=Meta):
         return db_connection.execute('SELECT 1 FROM users WHERE id = ?', (id,)).fetchone()
 """
 
-class user(DB_class):
-
-    def __init__(self):
-        super().__init__()
-        user.attributes = ("id", "name", "surname", "country", "gender")
+class User(DB_class):
+    attributes = ("name", "surname", "country", "gender")
     """
     @staticmethod
     def push(db_connection, id, name, surname, country, gender):

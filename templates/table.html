@@ -1,37 +1,28 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %}Users{% endblock %}</h1>
+    <h1>{% block title %} {{ table_class | table_name }} {% endblock %}</h1>
     <table class="table">
       <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">ID</th>
-          <th scope="col">Name</th>
-          <th scope="col">Surname</th>
+          <th scope="col">{{ table_class | get_id }}</th>
+          {% for attribute in table_class | get_attributes %}
+            <th scope="col">{{ attribute }}</th>
+          {% endfor %}
         </tr>
       </thead>
       <tbody>
+      {% for row in rows %}
         <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Larry</td>
-          <td>the Bird</td>
-          <td>@twitter</td>
-        </tr>
+            <td>1</td>
+            <td>{{ row["id"] }}</td>
+            {% for attribute in table_class | get_attributes %}
+              <td>{{ row[attribute] }}</td>
+            {% endfor %}
+          </tr>
+      {% endfor %}
       </tbody>
     </table>
-    {% for user in users %}
-    {% endfor %}
+
 {% endblock %}
