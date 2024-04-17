@@ -6,10 +6,13 @@ class Meta(type):
 class DB_class(metaclass=Meta):
     id = "id"
     attributes = ()
+
     @classmethod
     def push(cls, DB_connection, **all_attributes):
-        DB_connection.execute(f"INSERT INTO {cls.table_name} {str(cls.attributes)} VALUES ?",
-                              (str(tuple(all_attributes))))
+        placeholders = ', '.join('?' * len(all_attributes))
+        attributes = ', '.join(cls.attributes)
+        query = f'INSERT INTO {cls.table_name} ({attributes}) VALUES ({placeholders})'
+        DB_connection.execute(query, tuple(all_attributes.values()))
 
     @classmethod
     def select(cls, db_connection, amount=None):

@@ -8,6 +8,7 @@ def get_db_connection(db = 'database.db'):
     return connection
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'smth'
 
 
 @app.template_filter('table_name')
@@ -33,3 +34,18 @@ def users():
     users = User.select(connection)
     return render_template('table.html', rows=users, table_class=User)
 
+@app.route('/create', methods=['GET', 'POST'])
+#those lines post all required data in user and rendering create.html
+def create():
+    if request.method == 'POST':
+        connection = get_db_connection()
+        values = {}
+        #values[User.id] = request.form.get('id')
+        for attribute in User.attributes:
+            values[attribute] = request.form[attribute]
+        User.push(connection, **values)
+        connection.commit()
+        connection.close()
+        flash('User created successfully!', 'success')
+        return redirect(url_for('users'))
+    return render_template('create.html', model=User)
