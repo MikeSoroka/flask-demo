@@ -29,23 +29,50 @@ def index():
 
 @app.route('/users')
 def users():
-    print(User.attributes)
     connection = get_db_connection()
     users = User.select(connection)
     return render_template('table.html', rows=users, table_class=User)
 
-@app.route('/create', methods=['GET', 'POST'])
+@app.route('/create', methods=('GET', 'POST'))
 #those lines post all required data in user and rendering create.html
 def create():
     if request.method == 'POST':
         connection = get_db_connection()
-        values = {}
+        values = []
         #values[User.id] = request.form.get('id')
         for attribute in User.attributes:
-            values[attribute] = request.form[attribute]
-        User.push(connection, **values)
+            values.append(request.form[attribute])
+        User.push(connection, *values)
         connection.commit()
         connection.close()
         flash('User created successfully!', 'success')
         return redirect(url_for('users'))
     return render_template('create.html', model=User)
+
+@app.route('/edit/<int:user_id>', methods=('GET', 'POST'))
+#those lines post all required data in user and rendering create.html
+def edit(user_id):
+    connection = get_db_connection()
+    record = User.get(connection, user_id)
+    print(record.keys())
+    if request.method == 'POST':
+        values = []
+        #values[User.id] = request.form.get('id')
+        for attribute in User.attributes:
+            values.append(request.form[attribute])
+        User.update(connection, user_id, *values)
+        connection.commit()
+        connection.close()
+        flash('User edited successfully!', 'success')
+        return redirect(url_for('users'))
+    return render_template('edit.html', model=User, record=record)
+
+@app.route('/delete/<int:user_id>', methods=('GET', 'POST'))
+def delete(user_id):
+    connection = get_db_connection()
+    record = User.get(connection, user_id)
+    User.delete(connection, user_id)
+    connection.commit()
+    connection.close()
+    flash('User deleted successfully!', 'success')
+    return redirect(url_for('users'))

@@ -15,11 +15,12 @@
       <tbody>
       {% for row in rows %}
         <tr>
-            <td>1</td>
+            <td>{{ loop.index }}</td>
             <td>{{ row["id"] }}</td>
             {% for attribute in table_class | get_attributes %}
-              <td>{{ row[attribute] }}</td>
+            <td>{{ row[attribute] }}</td>
             {% endfor %}
+            <td><a href = "{{ url_for('delete', user_id=row.id) }}">Delete</a></td>
           </tr>
       {% endfor %}
       </tbody>
