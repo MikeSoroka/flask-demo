@@ -2,6 +2,15 @@ import sqlite3
 from flask import Flask, render_template, request, url_for, flash, redirect
 from DB_Classes import *
 
+#transforms string of type <smth>s to <SMTH>
+def tableNameToClassName(link):
+    return link[:-1].upper()
+
+classStrings = {"users": User,
+                "courses": Course,
+                "payment_methods": PaymentMethod,
+                "user_courses": UserCourse,}
+
 def get_db_connection(db = 'database.db'):
     connection = sqlite3.connect(db)
     connection.row_factory = sqlite3.Row
@@ -27,52 +36,55 @@ def getID(myClass):
 def index():
     return render_template('index.html')
 
-@app.route('/users')
-def users():
+@app.route('/<string:table_name>')
+def show(table_name):
     connection = get_db_connection()
-    users = User.select(connection)
-    return render_template('table.html', rows=users, table_class=User)
+    my_class = classStrings[table_name]
+    rows = my_class.select(connection)
+    return render_template('table.html', rows=rows, table_class=my_class)
 
-@app.route('/create', methods=('GET', 'POST'))
+@app.route('/create/<string:table_name>', methods=('GET', 'POST'))
 #those lines post all required data in user and rendering create.html
-def create():
+def create(table_name):
+    my_class = classStrings[table_name]
     if request.method == 'POST':
         connection = get_db_connection()
         values = []
-        #values[User.id] = request.form.get('id')
-        for attribute in User.attributes:
+        for attribute in my_class.attributes:
             values.append(request.form[attribute])
-        User.push(connection, *values)
+        my_class.push(connection, *values)
         connection.commit()
         connection.close()
-        flash('User created successfully!', 'success')
-        return redirect(url_for('users'))
-    return render_template('create.html', model=User)
+        flash('my_class created successfully!', 'success')
+        return redirect(f'/{table_name}')
+    return render_template('create.html', model=my_class)
 
-@app.route('/edit/<int:user_id>', methods=('GET', 'POST'))
+@app.route('/edit/<string:table_name>/<int:element_id>', methods=('GET', 'POST'))
 #those lines post all required data in user and rendering create.html
-def edit(user_id):
+def edit(table_name, element_id):
     connection = get_db_connection()
-    record = User.get(connection, user_id)
+    my_class = classStrings[table_name]
+    record = my_class.get(connection, element_id)
     print(record.keys())
     if request.method == 'POST':
         values = []
-        #values[User.id] = request.form.get('id')
-        for attribute in User.attributes:
+        #values[my_class.id] = request.form.get('id')
+        for attribute in my_class.attributes:
             values.append(request.form[attribute])
-        User.update(connection, user_id, *values)
+        my_class.update(connection, element_id, *values)
         connection.commit()
         connection.close()
-        flash('User edited successfully!', 'success')
-        return redirect(url_for('users'))
-    return render_template('edit.html', model=User, record=record)
+        flash('my_class edited successfully!', 'success')
+        return redirect(f'/{table_name}')
+    return render_template('edit.html', model=my_class, record=record)
 
-@app.route('/delete/<int:user_id>', methods=('GET', 'POST'))
-def delete(user_id):
+@app.route('/delete/<string:table_name>/<int:element_id>', methods=('GET', 'POST'))
+def delete(table_name, element_id):
     connection = get_db_connection()
-    record = User.get(connection, user_id)
-    User.delete(connection, user_id)
+    my_class = classStrings[table_name]
+    record = my_class.get(connection, element_id)
+    my_class.delete(connection, element_id)
     connection.commit()
     connection.close()
-    flash('User deleted successfully!', 'success')
-    return redirect(url_for('users'))
+    flash('my_class deleted successfully!', 'success')
+    return redirect(f'/{table_name}')
