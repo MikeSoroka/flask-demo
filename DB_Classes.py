@@ -6,6 +6,7 @@
 class DB_class():
     id = "id"
     table_name = ""
+    stringRepresentation = ""
     attributes = ()
 
     @classmethod
@@ -41,19 +42,23 @@ class DB_class():
 
 class User(DB_class):
     table_name = "users"
+    stringRepresentation = "User"
     attributes = ("name", "surname", "country", "gender")
 
 
-class PaymentMethod(DB_class):
-    table_name = "payment_methods"
-    attributes = ("card_number", "cvv_code", "holder_name", "card_name", "paying_system", "fk_USERid")
+class Lecture(DB_class):
+    table_name = "lectures"
+    stringRepresentation = "Lecture"
+    attributes = ("title", "fk_Courseid")
 
 
 class Course(DB_class):
     table_name = "courses"
+    stringRepresentation = "Course"
     attributes = ("name", "approximate_duration", "overview", "price")
 
 
-class UserCourse(DB_class):
-    table_name = "user_courses"
-    attributes = ("is_completed", "fk_COURSEid", "fk_USERid")
+class UserLecture(DB_class):
+    table_name = "user_lectures"
+    stringRepresentation = "User Lecture"
+    attributes = ("is_completed", "is_starred", "fk_LECTUREid", "fk_USERid")

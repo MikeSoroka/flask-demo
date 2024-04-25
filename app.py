@@ -25,13 +25,9 @@ def tableNameToClassName(link):
 
 classAdresses = {"users": User,
                 "courses": Course,
-                "payment_methods": PaymentMethod,
-                "user_courses": UserCourse,}
+                "lectures": Lecture,
+                "user_lectures": UserLecture,}
 
-classNames = {User: "User",
-              Course: "Course",
-              PaymentMethod: "Payment Method",
-              UserCourse: "User Course",}
 
 def get_db_connection(db = 'database.db'):
     connection = sqlite3.connect(db)
@@ -48,7 +44,7 @@ def attributePossibleValues(currentClass, attribute):
 
 @app.template_filter('className')
 def className(givenClass):
-    return classNames[givenClass]
+    return givenClass.stringRepresentation
 
 @app.template_filter('muliple_variables')
 def isMultipleVariablesEntry(currentClass, currentAttribute):
@@ -120,5 +116,5 @@ def delete(table_name, element_id):
     my_class.delete(connection, element_id)
     connection.commit()
     connection.close()
-    flash('my_class deleted successfully!', 'success')
+    flash(f'{my_class.stringRepresentation} deleted successfully!', 'success')
     return redirect(f'/{table_name}')

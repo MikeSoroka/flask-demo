@@ -24,38 +24,38 @@
                 </li>
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id = "dropdown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        User
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdown1">
-                        <a class="dropdown-item" href="{{ url_for('show', table_name='users') }}">Users table</a>
-                        <a class="dropdown-item" href="{{ url_for('create', table_name='users') }}">Add new user</a>
-                    </div>
-                </div>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button"  id="dropdown2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        User Course
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdown2">
-                        <a class="dropdown-item" href="{{ url_for('show', table_name='user_courses') }}">User courses table</a>
-                        <a class="dropdown-item" href="{{ url_for('create', table_name='user_courses') }}">Add new User course</a>
-                    </div>
-                </div>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id = "dropdown3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Course
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdown3">
+                    <div class="dropdown-menu" aria-labelledby="dropdown1">
                         <a class="dropdown-item" href="{{ url_for('show', table_name='courses') }}">Courses table</a>
                         <a class="dropdown-item" href="{{ url_for('create', table_name='courses') }}">Add new Course</a>
                     </div>
                 </div>
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id = "dropdown4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Payment method
+                        Lecture
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdown4">
-                        <a class="dropdown-item" href="{{ url_for('show', table_name='payment_methods') }}">Payment methods table</a>
-                        <a class="dropdown-item" href="{{ url_for('create', table_name='payment_methods') }}">Add new User</a>
+                        <a class="dropdown-item" href="{{ url_for('show', table_name='lectures') }}">Lectures table</a>
+                        <a class="dropdown-item" href="{{ url_for('create', table_name='lectures') }}">Add new Lecture</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button"  id="dropdown2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        User Lecture
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdown2">
+                        <a class="dropdown-item" href="{{ url_for('show', table_name='user_lectures') }}">User Lectures table</a>
+                        <a class="dropdown-item" href="{{ url_for('create', table_name='user_lectures') }}">Add new User Lecture</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id = "dropdown3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        User
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdown3">
+                        <a class="dropdown-item" href="{{ url_for('show', table_name='users') }}">Users table</a>
+                        <a class="dropdown-item" href="{{ url_for('create', table_name='users') }}">Add new User</a>
                     </div>
                 </div>
             </ul>
