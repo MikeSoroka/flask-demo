@@ -1,15 +1,37 @@
 import sqlite3
 from flask import Flask, render_template, request, url_for, flash, redirect
 from DB_Classes import *
+from data_entries import *
+
+def idListByClass(db, className): #type:(str, str) -> list
+    res = []
+    connection = get_db_connection(db)
+    currentClass = classAdresses[className]
+    for row in currentClass.select(connection):
+        res.append(row[currentClass.id])
+    return res
+
+def idListByFK(db, FK): #type:(str, foreignKey) -> list
+    res = []
+    connection = get_db_connection(db)
+    currentClass = FK.Class
+    for row in currentClass.select(connection):
+        res.append(row[currentClass.id])
+    return res
 
 #transforms string of type <smth>s to <SMTH>
 def tableNameToClassName(link):
     return link[:-1].upper()
 
-classStrings = {"users": User,
+classAdresses = {"users": User,
                 "courses": Course,
                 "payment_methods": PaymentMethod,
                 "user_courses": UserCourse,}
+
+classNames = {User: "User",
+              Course: "Course",
+              PaymentMethod: "Payment Method",
+              UserCourse: "User Course",}
 
 def get_db_connection(db = 'database.db'):
     connection = sqlite3.connect(db)
@@ -19,6 +41,18 @@ def get_db_connection(db = 'database.db'):
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'smth'
 
+
+def attributePossibleValues(currentClass, attribute):
+    currentAttribute = getattr(currentClass, attribute)
+    return currentAttribute
+
+@app.template_filter('className')
+def className(givenClass):
+    return classNames[givenClass]
+
+@app.template_filter('muliple_variables')
+def isMultipleVariablesEntry(currentClass, currentAttribute):
+    return attributePossibleValues(currentClass, currentAttribute) != None
 
 @app.template_filter('table_name')
 def getTableName(myClass):
@@ -39,14 +73,14 @@ def index():
 @app.route('/<string:table_name>')
 def show(table_name):
     connection = get_db_connection()
-    my_class = classStrings[table_name]
+    my_class = classAdresses[table_name]
     rows = my_class.select(connection)
     return render_template('table.html', rows=rows, table_class=my_class)
 
 @app.route('/create/<string:table_name>', methods=('GET', 'POST'))
 #those lines post all required data in user and rendering create.html
 def create(table_name):
-    my_class = classStrings[table_name]
+    my_class = classAdresses[table_name]
     if request.method == 'POST':
         connection = get_db_connection()
         values = []
@@ -63,7 +97,7 @@ def create(table_name):
 #those lines post all required data in user and rendering create.html
 def edit(table_name, element_id):
     connection = get_db_connection()
-    my_class = classStrings[table_name]
+    my_class = classAdresses[table_name]
     record = my_class.get(connection, element_id)
     print(record.keys())
     if request.method == 'POST':
@@ -81,7 +115,7 @@ def edit(table_name, element_id):
 @app.route('/delete/<string:table_name>/<int:element_id>', methods=('GET', 'POST'))
 def delete(table_name, element_id):
     connection = get_db_connection()
-    my_class = classStrings[table_name]
+    my_class = classAdresses[table_name]
     record = my_class.get(connection, element_id)
     my_class.delete(connection, element_id)
     connection.commit()

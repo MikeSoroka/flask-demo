@@ -3,3 +3,8 @@
   background-color: transparent;
   border-color: transparent;
 }
+
+.delete-link
+{
+  color: red;
+}
