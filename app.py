@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, url_for, flash, redirect
 from DB_Classes import *
 from data_entries import *
 
-def idListByClass(db, className): #type:(str, str) -> list
+def idListByClass(className, db = 'database.db'): #type:(str, str) -> list
     res = []
     connection = get_db_connection(db)
     currentClass = classAdresses[className]
@@ -11,7 +11,7 @@ def idListByClass(db, className): #type:(str, str) -> list
         res.append(row[currentClass.id])
     return res
 
-def idListByFK(db, FK): #type:(str, foreignKey) -> list
+def idListByFK(FK, db = 'database.db'): #type:(foreignKey, str) -> list
     res = []
     connection = get_db_connection(db)
     currentClass = FK.Class
@@ -41,6 +41,26 @@ app.config['SECRET_KEY'] = 'smth'
 def attributePossibleValues(currentClass, attribute):
     currentAttribute = getattr(currentClass, attribute)
     return currentAttribute
+
+@app.template_filter('connectedToFK')
+def connected(FK):
+    return idListByFK(FK)
+
+@app.template_filter('attributeType')
+def attributeType(attribute):
+    print(type(attribute))
+    if isinstance(attribute, limitedVariantsDataEntry):
+        print("M")
+        return "M"
+    if isinstance(attribute, foreignKey):
+        print("FK")
+        return "FK"
+    print("C")
+    return "C"
+
+@app.template_filter('str')
+def toString(value):
+    return str(value)
 
 @app.template_filter('className')
 def className(givenClass):
@@ -81,7 +101,7 @@ def create(table_name):
         connection = get_db_connection()
         values = []
         for attribute in my_class.attributes:
-            values.append(request.form[attribute])
+            values.append(request.form[str(attribute)])
         my_class.push(connection, *values)
         connection.commit()
         connection.close()
@@ -100,7 +120,7 @@ def edit(table_name, element_id):
         values = []
         #values[my_class.id] = request.form.get('id')
         for attribute in my_class.attributes:
-            values.append(request.form[attribute])
+            values.append(request.form[str(attribute)])
         my_class.update(connection, element_id, *values)
         connection.commit()
         connection.close()

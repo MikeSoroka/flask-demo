@@ -12,7 +12,6 @@
           {% endfor %}
             <th scope="col"></th>
             <th scope="col"></th>
-
         </tr>
       </thead>
       <tbody>
@@ -21,7 +20,7 @@
             <td>{{ loop.index }}</td>
             <td>{{ row["id"] }}</td>
             {% for attribute in table_class | get_attributes %}
-            <td>{{ row[attribute] }}</td>
+            <td>{{ row[attribute | str] }}</td>
             {% endfor %}
             <td><a href="{{ url_for('edit', table_name = table_class | table_name, element_id=row['id']) }}">Edit</a></td>
             <td><a href="{{ url_for('delete', table_name = table_class | table_name, element_id=row['id']) }}" class="delete-link">Delete</a></td>

@@ -2,6 +2,8 @@
 #     def __new__(cls, name, bases, attrs):
 #         attrs['table_name'] = name.upper() + "S"
 #         return super().__new__(cls, name, bases, attrs)
+from data_entries import *
+
 
 class DB_class():
     id = "id"
@@ -12,9 +14,9 @@ class DB_class():
     @classmethod
     def push(cls, DB_connection, *non_id_attributes):
         placeholders = ', '.join('?' * len(non_id_attributes))
-        attributes = ', '.join(cls.attributes)
+        attributes = ', '.join((str(i) for i in cls.attributes))
         query = f'INSERT INTO {cls.table_name} ({attributes}) VALUES ({placeholders})'
-        DB_connection.execute(query, tuple(non_id_attributes))
+        DB_connection.execute(query, tuple(str(i) for i in non_id_attributes))
 
     @classmethod
     def select(cls, db_connection, amount=None):
@@ -43,22 +45,23 @@ class DB_class():
 class User(DB_class):
     table_name = "users"
     stringRepresentation = "User"
-    attributes = ("name", "surname", "country", "gender")
-
-
-class Lecture(DB_class):
-    table_name = "lectures"
-    stringRepresentation = "Lecture"
-    attributes = ("title", "fk_Courseid")
-
+    attributes = ("name", "surname", "country",
+                  limitedVariantsDataEntry("gender", ("male", "female")))
 
 class Course(DB_class):
     table_name = "courses"
     stringRepresentation = "Course"
     attributes = ("name", "approximate_duration", "overview", "price")
 
+class Lecture(DB_class):
+    table_name = "lectures"
+    stringRepresentation = "Lecture"
+    attributes = ("title",
+                  foreignKey("fk_Courseid", Course))
 
 class UserLecture(DB_class):
     table_name = "user_lectures"
     stringRepresentation = "User Lecture"
-    attributes = ("is_completed", "is_starred", "fk_LECTUREid", "fk_USERid")
+    attributes = ("is_completed", "is_starred",
+                  foreignKey("fk_LECTUREid", Lecture),
+                  foreignKey("fk_USERid", User))

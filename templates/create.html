@@ -14,9 +14,24 @@
     {% for attr in model.attributes %}
     <div class="form-group">
         <label for="{{ attr }}">{{ attr }}</label>
+        {% if attr | attributeType == "C" %}
         <input type="text" name="{{ attr }}"
                placeholder="{{ attr }}" class="form-control"
                value="{{ request.form[attr] }}"></input>
+
+        {% elif attr | attributeType == "M" %}
+            <select name="{{ attr }}" class="form-control">
+                {% for variant in attr.variants %}
+                    <option value="{{ variant }}">{{ variant }}</option>
+                {% endfor %}
+            </select>
+        {% else %}
+            <select name="{{ attr }}" class="form-control">
+                {% for id in (attr | connectedToFK) %}
+                    <option value="{{ id }}">{{ id }}</option>
+                {% endfor %}
+            </select>
+        {% endif %}
     </div>
     {% endfor %}
 
