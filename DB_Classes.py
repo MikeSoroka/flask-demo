@@ -62,6 +62,7 @@ class Lecture(DB_class):
 class UserLecture(DB_class):
     table_name = "user_lectures"
     stringRepresentation = "User Lecture"
-    attributes = ("is_completed", "is_starred",
+    attributes = (limitedVariantsDataEntry("is_completed", (0, 1)),
+                  limitedVariantsDataEntry("is_starred", (0,1)),
                   foreignKey("fk_LECTUREid", Lecture),
                   foreignKey("fk_USERid", User))
