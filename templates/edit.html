@@ -27,8 +27,8 @@
             </select>
         {% else %}
             <select name="{{ attr }}" class="form-control">
-                {% for id in (attr | connectedToFK) %}
-                    <option value="{{ id }}">{{ id }}</option>
+                {% for id in (fkVars[attr]) %}
+                    <option value="{{ id }}">{{fkVars[attr][id] | str}}</option>
                 {% endfor %}
             </select>
         {% endif %}

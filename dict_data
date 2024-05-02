@@ -1,0 +1,2 @@
+{<data_entries.foreignKey object at 0x7a762c61a050>: {1: 'Introduction to Programming', 2: 'Web Development Fundamentals', 3: 'Data Science Essentials', 4: 'Graphic Design Basics', 5: 'Language Learning: Spanish', 6: 'Finance for Beginners', 7: 'Photography 101', 8: 'Fitness and Nutrition', 9: 'Introduction to Psychology', 10: 'Music Theory Fundamentals'}}
+{<data_entries.foreignKey object at 0x7a762c61a290>: {1: 'Male', 2: 'Female'}}

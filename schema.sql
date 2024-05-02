@@ -1,32 +1,34 @@
+CREATE TABLE genders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    gender VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE users (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name VARCHAR(255) NOT NULL,
-  surname VARCHAR(255) NOT NULL,
-  country VARCHAR(255),
-  gender VARCHAR(255)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(255) NOT NULL,
+    surname VARCHAR(255) NOT NULL,
+    country VARCHAR(255) NOT NULL,
+    fk_GENDERid INTEGER REFERENCES genders(id)
 );
 
 CREATE TABLE courses (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name VARCHAR(255) NOT NULL,
-  approximate_duration INT,
-  overview TEXT,
-  price DECIMAL(10,2)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(255) NOT NULL,
+    approximate_duration INTEGER NOT NULL,
+    overview TEXT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL
 );
 
 CREATE TABLE lectures (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  title VARCHAR(255) NOT NULL,
-  fk_Courseid INT,
-  FOREIGN KEY (fk_Courseid) REFERENCES courses(id)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title VARCHAR(255) NOT NULL,
+    fk_COURSEid INTEGER REFERENCES courses(id)
 );
 
 CREATE TABLE user_lectures (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  is_completed BOOLEAN,
-  is_starred BOOLEAN,
-  fk_LECTUREid INT,
-  fk_USERid INT,
-  FOREIGN KEY (fk_LECTUREid) REFERENCES lectures(id),
-  FOREIGN KEY (fk_USERid) REFERENCES users(id)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    is_completed BOOLEAN NOT NULL,
+    is_starred BOOLEAN NOT NULL,
+    fk_LECTUREid INTEGER REFERENCES lectures(id),
+    fk_USERid INTEGER REFERENCES users(id)
 );

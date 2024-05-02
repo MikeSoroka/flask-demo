@@ -10,6 +10,14 @@ class foreignKey():
         self.name = name
         self.foreignClass = correspondingClass
 
+    def __eq__(self, other):
+        return self.name == other.name and self.foreignClass == other.foreignClass
+
+    def __key(self):
+        return self.name, self.foreignClass
+
+    def __hash__(self):
+        return hash(self.__key())
     @property
     def Class(self):
         return self.foreignClass
@@ -23,4 +31,4 @@ class foreignKey():
         return self.foreignClass.table_name
 
     def __str__(self):
-        return self.name
+        return self.name.lower()

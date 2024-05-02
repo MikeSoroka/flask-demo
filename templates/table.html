@@ -2,12 +2,12 @@
 
 {% block content %}
     <h1>{% block title %} {{ table_class | table_name }} {% endblock %}</h1>
+    {% set id = table_class | get_id %}
     <table class="table">
       <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">{{ table_class | get_id }}</th>
-          {% for attribute in table_class | get_attributes %}
+          {% for attribute in table_class | get_title %}
             <th scope="col">{{ attribute }}</th>
           {% endfor %}
             <th scope="col"></th>
@@ -18,9 +18,13 @@
       {% for row in rows %}
         <tr>
             <td>{{ loop.index }}</td>
-            <td>{{ row["id"] }}</td>
+            <td>{{ row[id] }}</td>
             {% for attribute in table_class | get_attributes %}
-            <td>{{ row[attribute | str] }}</td>
+                {% if special_attributes[attribute] is defined %}
+                    <td>{{special_attributes[attribute][row[attribute | str]] | str}}</td>
+                {% else %}
+                    <td>{{ row[attribute | str] }}</td>
+                {% endif %}
             {% endfor %}
             <td><a href="{{ url_for('edit', table_name = table_class | table_name, element_id=row['id']) }}">Edit</a></td>
             <td><a href="{{ url_for('delete', table_name = table_class | table_name, element_id=row['id']) }}" class="delete-link">Delete</a></td>

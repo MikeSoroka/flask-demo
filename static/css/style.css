@@ -8,3 +8,8 @@
 {
   color: red;
 }
+
+option{
+  height: 50px;
+  overflow: auto;
+}

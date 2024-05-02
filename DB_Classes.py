@@ -42,11 +42,16 @@ class DB_class():
     def get(cls, db_connection, id):
         return db_connection.execute(f'SELECT * FROM {cls.table_name} WHERE {cls.id} = ?', (id,)).fetchone()
 
+class Gender(DB_class):
+    table_name = "genders"
+    stringRepresentation = "Gender"
+    attibutes = ("gender",)
+
 class User(DB_class):
     table_name = "users"
     stringRepresentation = "User"
     attributes = ("name", "surname", "country",
-                  limitedVariantsDataEntry("gender", ("male", "female")))
+                  foreignKey("fk_GENDERid", Gender))
 
 class Course(DB_class):
     table_name = "courses"
@@ -57,7 +62,7 @@ class Lecture(DB_class):
     table_name = "lectures"
     stringRepresentation = "Lecture"
     attributes = ("title",
-                  foreignKey("fk_Courseid", Course))
+                  foreignKey("fk_COURSEid", Course))
 
 class UserLecture(DB_class):
     table_name = "user_lectures"
@@ -66,3 +71,4 @@ class UserLecture(DB_class):
                   limitedVariantsDataEntry("is_starred", (0,1)),
                   foreignKey("fk_LECTUREid", Lecture),
                   foreignKey("fk_USERid", User))
+
