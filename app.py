@@ -392,7 +392,7 @@ def editMult(element_id, entriesAmount):
     existing_lectures = Lecture.get(connection, element_id)
 
     connection.commit()
-
+    print(records)
     return render_template('edit_multiple_files.html', model=my_class, fkVars=fkVarsDict,
                             multipleAddClass=Lecture, fkAddVars=fkVarsDictMultiple,
                             intermediateClass=UserLecture, entriesAmount=entriesAmount,

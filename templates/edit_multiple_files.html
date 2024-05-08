@@ -3,7 +3,7 @@
 {% block multipleInput %}
 {% for existing in records %}
 
-{% endfor %}
+
 <div class="input-group">
                 {% for attr in multipleAddClass.attributes %}
 
@@ -16,14 +16,14 @@
 
                             {% elif attr | attributeType == "M" %}
                                 <select name="{{ existing[attr] }}" class="form-control">
-                                    <option value="selected">Select a new value</option>
+                                    <option value="selected">Select a new va</option>
                                     {% for variant in attr.variants %}
                                         <option value="{{ variant }}">{{ variant }}</option>
                                     {% endfor %}
                                 </select>
                             {% else %}
                                 <select name="{{ existing[attr] }}" class="form-control">
-                                    <option value="selected">Select a new value</option>
+                                    <option value="selected">Select a new va</option>
                                     {% for id in (fkAddVars[attr.Class]) %}
                                         <option value="{{ id }}">{{existing[attr]}}</option>
                                     {% endfor %}
@@ -53,6 +53,7 @@
                         </div>
                 {% endfor %}
         </div>
+{% endfor %}
 {% for i in range(entriesAmount) %}
         <div class="input-group">
                 {% for attr in multipleAddClass.attributes %}
