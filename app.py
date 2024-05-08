@@ -4,6 +4,9 @@ from flask import Flask, render_template, request, url_for, flash, redirect
 from DB_Classes import *
 from data_entries import *
 
+app = Flask(__name__)
+
+
 usersTitle = ["ID", "Name", "Surname", "Country", "Gender"]
 lecturesTitle = ["ID", "Title", "Course"]
 coursesTitle = ["ID", "Name", "Approximate duration", "Overview", "Price"]
@@ -165,6 +168,8 @@ def getTitle(myClass):
 def getID(myClass):
     return myClass.id
 
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -305,7 +310,6 @@ def createMult(entriesAmount):
                                intermediateClass=UserLecture, entriesAmount=entriesAmount)
     return render_template('create.html', model=my_class, fkVars=fkVarsDict)
 
-app = Flask(__name__)
 
 
 @app.route('/edit/users/<int:element_id>/<int:entriesAmount>', methods=('GET', 'POST'))
