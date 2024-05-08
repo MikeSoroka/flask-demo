@@ -1,0 +1,53 @@
+{% extends 'edit.html' %}
+
+{% block multipleInput %}
+{% for i in range(entriesAmount) %}
+        <div class="input-group">
+                {% for attr in multipleAddClass.attributes %}
+
+                        <div class="form-group" style="width:20%; margin-right: 10px">
+                            <label for="{{ attr }}">{{ attr }}</label>
+                            {% if attr | attributeType == "C" %}
+                                <input type="text" name="{{ attr | str + i | str }}"
+                                   placeholder="{{ attr | str + i | str}}" class="form-control"
+                                   value="{{ request.form[attr | str + i | str]}}">
+
+                            {% elif attr | attributeType == "M" %}
+                                <select name="{{ attr | str + i | str }}" class="form-control">
+                                    <option value="selected">Select a new value</option>
+                                    {% for variant in attr.variants %}
+                                        <option value="{{ variant }}">{{ variant }}</option>
+                                    {% endfor %}
+                                </select>
+                            {% else %}
+                                <select name="{{ attr | str + i | str }}" class="form-control">
+                                    <option value="selected">Select a new value</option>
+                                    {% for id in (fkAddVars[attr.Class]) %}
+                                        <option value="{{ id }}">{{fkAddVars[attr.Class][id]}}</option>
+                                    {% endfor %}
+                                </select>
+                            {% endif %}
+                        </div>
+                {% endfor %}
+
+            {% for attr in intermediateClass.attributes %}
+                <div class="form-group" style="width:20%; margin-right: 10px">
+                        {% if attr | attributeType == "C" %}
+                            <label for="{{ attr }}">{{ attr }}</label>
+                            <input type="text" name="{{ attr | str + i | str }}int"
+                                   placeholder="{{ attr | str + i | str}}int" class="form-control"
+                                   value="{{ request.form[attr | str + i | str] }}">
+
+                        {% elif attr | attributeType == "M" %}
+                            <label for="{{ attr }}">{{ attr }}</label>
+                            <select name="{{ attr | str + i | str }}int" class="form-control">
+                                {% for variant in attr.variants %}
+                                    <option value="{{ variant }}">{{ variant }}</option>
+                                    {% endfor %}
+                            </select>
+                            {% endif %}
+                        </div>
+                {% endfor %}
+        </div>
+{% endfor %}
+{% endblock %}

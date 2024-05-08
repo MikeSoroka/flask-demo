@@ -13,3 +13,8 @@ option{
   height: 50px;
   overflow: auto;
 }
+
+li {
+  display: inline;
+  margin-right: 10px; /* optional, adds some spacing between list items */
+}

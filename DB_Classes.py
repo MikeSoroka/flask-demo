@@ -42,6 +42,11 @@ class DB_class():
     def get(cls, db_connection, id):
         return db_connection.execute(f'SELECT * FROM {cls.table_name} WHERE {cls.id} = ?', (id,)).fetchone()
 
+    @classmethod
+    def last(cls, db_connection):
+        return db_connection.execute(f'SELECT * FROM {cls.table_name} WHERE {cls.id}=(SELECT max({cls.id}) '
+                                     f'FROM {cls.table_name})').fetchone()[0]
+
 class Gender(DB_class):
     table_name = "genders"
     stringRepresentation = "Gender"

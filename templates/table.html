@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} {{ table_class | table_name }} {% endblock %}</h1>
+    <h1>{% block title %} {{ table_class.stringRepresentation }}s {% endblock %}</h1>
     {% set id = table_class | get_id %}
     <table class="table">
       <thead>
