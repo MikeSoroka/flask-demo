@@ -18,6 +18,16 @@ classAdresses = {"users": User,
                  "user_lectures": UserLecture,
                  "genders": Gender}
 
+@app.template_filter('UL')
+def getL(usID):
+    res = []
+    connection = get_db_connection()
+    ULs = UserLecture.select(connection)
+    for ul in ULs:
+        if str(ul["fkUSER_id"]) == str(usID):
+            res.append(ul["fkUSER_id"])
+    return res
+
 
 def lecturesByID(ID, db='database.db'):
     res = []
@@ -25,7 +35,7 @@ def lecturesByID(ID, db='database.db'):
     userLectures = UserLecture.select(connection)
     for userLecture in userLectures:
         if userLecture["fk_USERid"] == ID:
-            res.append(Lecture.get(connection, userLecture["fk_Lectureid"]))
+            res.append(dict(Lecture.get(connection, userLecture["fk_Lectureid"])))
 
     return res
 
@@ -158,6 +168,9 @@ def attributeType(attribute):
 def toString(value):
     return str(value)
 
+@app.template_filter('int')
+def toInt(value):
+    return int(value)
 
 @app.template_filter('className')
 def className(givenClass):
@@ -358,7 +371,12 @@ def editMult(element_id, entriesAmount):
         fkVarsDictMultiple.update({Class: meaningfulClassValues(Class)})
 
     connection = get_db_connection()  # get_db_connection function should be defined
-
+    existing_user = my_class.get(connection, element_id)
+    ID = existing_user["id"]
+    records = lecturesByID(ID)
+    existing_lectures = Lecture.get(connection, element_id)
+    for rec in records:
+        print(rec)
     if request.method == 'POST':
         values = []
         for attribute in my_class.attributes:
@@ -368,6 +386,17 @@ def editMult(element_id, entriesAmount):
         if my_class.table_name == "users":
             lecture_requests = []
             userlecture_requests = []
+
+            for rec in records:
+                print("-----------------------------------------------")
+                print(rec)
+                lecture_data = [request.form.get(str(attribute) + 'M' + str(rec["id"])) for attribute in Lecture.attributes]
+                userlecture_data = [request.form.get(str(attribute) + 'M' + str(rec["id"])) + "int"
+                                    for attribute in UserLecture.attributes
+                                    if not isinstance(attribute, foreignKey)]
+                lecture_requests.append(lecture_data)
+                userlecture_requests.append(userlecture_data)
+
             for i in range(entriesAmount):
                 lecture_data = [request.form.get(str(attribute) + str(i)) for attribute in Lecture.attributes]
                 userlecture_data = [request.form.get(str(attribute) + str(i) + "int")
@@ -386,14 +415,13 @@ def editMult(element_id, entriesAmount):
         return redirect('/users')  # replace 'users' with the name of route showing user list
 
     # These methods are assumed - replace them with the right method to fetch data
-    existing_user = my_class.get(connection, element_id)
-    ID = existing_user["id"]
-    records=lecturesByID(ID)
-    existing_lectures = Lecture.get(connection, element_id)
 
+    ULs = UserLecture.select(connection)
+    for ul in ULs:
+        for key in ul:
+            key = str(key)
     connection.commit()
-    print(records)
     return render_template('edit_multiple_files.html', model=my_class, fkVars=fkVarsDict,
                             multipleAddClass=Lecture, fkAddVars=fkVarsDictMultiple,
                             intermediateClass=UserLecture, entriesAmount=entriesAmount,
-                            record=existing_user, lectures=existing_lectures, records=records)
+                            record=existing_user, lectures=existing_lectures, records=records, addClass=ULs)
