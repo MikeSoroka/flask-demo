@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!--    Forms-->
+<form method="POST">
+    <div class="form-group">
+        <label for="is_completed">Select completion status:</label>
+        <select name="is_completed" class="form-control" id="is_completed">
+            <option value=0> Not Completed </option>
+            <option value=1> Completed </option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="is_starred">Is lecture starred:</label>
+        <select name="is_starred" class="form-control" id="is_starred">
+            <option value=0> Not Starred </option>
+            <option value=1> Starred </option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="age">Year of course start:</label>
+        <input type="text" name="age"
+               placeholder="age" class="form-control"
+               value="{{ request.form[age] }}" id="age"></input>
+    </div>
+    <!-- Add a datepicker here! -->
+<!--    <div class="form-group">-->
+<!--        <label for="datepicker">Select Date:</label>-->
+<!--        <input type="text" class="form-control" id="datepicker" name="date">-->
+<!--    </div>-->
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+<!--    Table with data-->
+<h1>{% block title %} Report {% endblock %}</h1>
+{% set id = table_class | get_id %}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            {% for attribute in table_class | get_title %}
+                <th scope="col">{{ attribute }}</th>
+            {% endfor %}
+            <th scope="col">Course</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in rows %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            {% for el in row %}
+                <td>{{ el }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

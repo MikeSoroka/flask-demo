@@ -57,7 +57,7 @@ class User(DB_class):
     stringRepresentation = "User"
     attributes = ("name", "surname", "country",
                   foreignKey("fk_GENDERid", Gender))
-
+#user's amount of lectures in a given course
 class Course(DB_class):
     table_name = "courses"
     stringRepresentation = "Course"
@@ -74,6 +74,7 @@ class UserLecture(DB_class):
     stringRepresentation = "User Lecture"
     attributes = (limitedVariantsDataEntry("is_completed", (0, 1)),
                   limitedVariantsDataEntry("is_starred", (0,1)),
+                  "start_date",
                   foreignKey("fk_LECTUREid", Lecture),
                   foreignKey("fk_USERid", User))
 

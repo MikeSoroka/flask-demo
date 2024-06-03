@@ -9,7 +9,7 @@ app = Flask(__name__)
 usersTitle = ["ID", "Name", "Surname", "Country", "Gender"]
 lecturesTitle = ["ID", "Title", "Course"]
 coursesTitle = ["ID", "Name", "Approximate duration", "Overview", "Price"]
-userLecturesTitle = ["ID", "Is Completed", "Is Starred", "Lecture", "User"]
+userLecturesTitle = ["ID", "Is Completed", "Is Starred", "Start Date", "Lecture", "User"]
 gendersTitle = ["ID", "Gender"]
 
 classAdresses = {"users": User,
@@ -18,15 +18,7 @@ classAdresses = {"users": User,
                  "user_lectures": UserLecture,
                  "genders": Gender}
 
-@app.template_filter('UL')
-def getL(usID):
-    res = []
-    connection = get_db_connection()
-    ULs = UserLecture.select(connection)
-    for ul in ULs:
-        if str(ul["fkUSER_id"]) == str(usID):
-            res.append(ul["fkUSER_id"])
-    return res
+
 
 
 def lecturesByID(ID, db='database.db'):
@@ -35,15 +27,22 @@ def lecturesByID(ID, db='database.db'):
     userLectures = UserLecture.select(connection)
     for userLecture in userLectures:
         if userLecture["fk_USERid"] == ID:
-            res.append(dict(Lecture.get(connection, userLecture["fk_Lectureid"])))
-
+            res.append(Lecture.get(connection, userLecture["fk_Lectureid"]))
     return res
+
+def ULByIDs(userID, lectureID, db='database.db'):
+    res = []
+    connection = get_db_connection(db)
+    userLectures = UserLecture.select(connection)
+    for userLecture in userLectures:
+        if userLecture["fk_USERid"] == userID and userLecture["fk_Lectureid"] == lectureID:
+            return(Lecture.get(connection, userLecture["fk_Lectureid"]))
+#return {}
 
 
 
 def tableFkToDict(table_name, rows):
     if (table_name == "user_lectures"):
-        print("UL")
         lect_dict = fkToDict(foreignKey("fk_LECTUREid", Lecture), rows, "title")
         name_dict = fkToDict(foreignKey("fk_USERid", User), rows, "name")
 
@@ -56,17 +55,14 @@ def tableFkToDict(table_name, rows):
                                                                  list(surname_dict.values())[0][ID]})
         return lect_dict | user_dict
     elif (table_name == "users"):
-        print("U")
         genders_dict = fkToDict(foreignKey("fk_GENDERid", Gender), rows, "gender")
         return genders_dict
 
     elif (table_name == "courses"):
-        print("C")
         return {}
 
     elif (table_name == "lectures"):
         courses_dict = fkToDict(foreignKey("fk_COURSEid", Course), rows, "name")
-        print("L")
         return courses_dict
 
 
@@ -146,6 +142,16 @@ def connected_classes(Class):
     return res
 
 
+@app.template_filter('getL')
+def getL(usID):
+    res = []
+    connection = get_db_connection()
+    ULs = UserLecture.select(connection)
+    for ul in ULs:
+        if str(ul["fk_USERid"]) == str(usID):
+            res.append(ul["fk_USERid"])
+    return res
+
 @app.template_filter('connectedToFK')
 def connected(FK):
     return idListByFK(FK)
@@ -153,20 +159,20 @@ def connected(FK):
 
 @app.template_filter('attributeType')
 def attributeType(attribute):
-    print(type(attribute))
     if isinstance(attribute, limitedVariantsDataEntry):
-        print("M")
         return "M"
     if isinstance(attribute, foreignKey):
-        print("FK")
         return "FK"
-    print("C")
     return "C"
 
 
 @app.template_filter('str')
 def toString(value):
     return str(value)
+
+@app.template_filter('len')
+def length(value):
+    return len(value)
 
 @app.template_filter('int')
 def toInt(value):
@@ -221,7 +227,9 @@ def show(table_name):
     rows = my_class.select(connection)
     special_attributes = {}
     # foreignKey("fk_USERid", User))
-    print(my_class.table_name)
+    if isinstance(my_class, User):
+        return render_template('users.html', rows=rows, table_class=my_class,
+                           special_attributes=tableFkToDict(my_class.table_name, rows))
     return render_template('table.html', rows=rows, table_class=my_class,
                            special_attributes=tableFkToDict(my_class.table_name, rows))
 
@@ -255,7 +263,6 @@ def edit(table_name, element_id):
     my_class = classAdresses[table_name]
     requestedClasses = connected_classes(my_class)
     record = my_class.get(connection, element_id)
-    print(record.keys())
     fkVarsDict = {}
     for Class in requestedClasses:
         fkVarsDict.update({Class: meaningfulClassValues(Class)})
@@ -284,144 +291,71 @@ def delete(table_name, element_id):
     return redirect(f'/{table_name}')
 
 
-@app.route('/add-fields', methods=['GET', 'POST'])
-def add_fields():
-    number_of_fields = request.form.get('number_of_fields')
-    if not number_of_fields:
-        number_of_fields = 1
-    elif request.form.get('add'):  # incrementing number of fields if "Add more" button was clicked
-        number_of_fields = int(number_of_fields) + 1
-    else:  # processing form data
-        data = ",".join([f"field_{i}:{request.form.get(f'field_{i}')} " for i in range(int(number_of_fields))])
-        print(data)  # replace this with data processing logic
-    return render_template('add_multiple_files.html', number_of_fields=number_of_fields)
-
-
-@app.route('/create/users/<int:entriesAmount>', methods=('GET', 'POST'))
-# those lines post all required data in user and rendering create.html
-def createMult(entriesAmount):
+@app.route('/report', methods=('GET', 'POST'))
+def report():
     table_name = "users"
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    data = cursor.execute("""
+        SELECT users.id, users.name, users.surname, users.country, genders.gender, lectures.title
+            FROM users
+            LEFT JOIN lectures
+            ON lectures.id IN
+               (SELECT fk_LECTUREid
+                FROM user_lectures
+                WHERE fk_USERid = users.id)
+            LEFT JOIN genders
+            ON genders.id = users.fk_GENDERid
+
+        GROUP BY users.id, lectures.id
+        ORDER BY users.id
+    """).fetchall()
+    #data.fetchall()
+    for row in data:
+        for key in row:
+            print(key)
+
+
     my_class = classAdresses[table_name]
-    requestedClasses = connected_classes(my_class)
-    fkVarsDict = {}
-    for Class in requestedClasses:
-        fkVarsDict.update({Class: meaningfulClassValues(Class)})
-
-    requestedClassesMultiple = connected_classes(Lecture)
-    fkVarsDictMultiple = {}
-    for Class in requestedClassesMultiple:
-        fkVarsDictMultiple.update({Class: meaningfulClassValues(Class)})
-    f = open("dict_data", "w")
-    f.write(str(fkVarsDictMultiple))
-    f.close()
-
+    rows = my_class.select(connection)
+    special_attributes = {}
+    # foreignKey("fk_USERid", User))
     if request.method == 'POST':
+        values = []
+        for attribute in ["is_completed", "is_starred", "age"]:
+            values.append(str(request.form[attribute]))
+
         connection = get_db_connection()
-        values = []
-        for attribute in my_class.attributes:
-            values.append(request.form[str(attribute)])
-        my_class.push(connection, *values)
-        if my_class.table_name == "users":
-            requests = []
-            requests_counter = entriesAmount
-            for i in range(requests_counter):
-                current_requests = []
-                for attribute in Lecture.attributes:
-                    current_requests.append(request.form[str(attribute) + str(i)])
-                requests.append(current_requests)
+        cursor = connection.cursor()
+        data = cursor.execute("""
+            SELECT
+                users.id,
+                users.name,
+                users.surname,
+                users.country,
+                genders.gender,
+                courses.name AS course,
+                COUNT(lectures.id) AS total_lectures,
+                CAST(ROUND(AVG(CASE WHEN ul.is_completed = ? THEN 1 ELSE 0 END) * 100, 1) AS TEXT) || '%' AS completion_rate,
+                CAST(ROUND(AVG(CASE WHEN ul.is_starred = ? THEN 1 ELSE 0 END) * 100, 1)AS TEXT) || '%' AS star_rate,
+                COUNT(CASE WHEN strftime('%Y', ul.start_date) = ? THEN 1 ELSE NULL END) AS lecture_years_count
+            FROM
+                users
+            LEFT JOIN
+                user_lectures ul ON ul.fk_USERid = users.id
+            LEFT JOIN
+                lectures ON lectures.id = ul.fk_LECTUREid
+            LEFT JOIN
+                courses ON courses.id = lectures.fk_COURSEid
+            LEFT JOIN
+                genders ON genders.id = users.fk_GENDERid
+                GROUP BY
+                    users.id,
+                    courses.id
+            ORDER BY
+                users.id;
 
-            intermRequests = []
-            for i in range(requests_counter):
-                current_requests = []
-                for attribute in UserLecture.attributes:
-                    if not isinstance(attribute, foreignKey):
-                        current_requests.append(request.form[str(attribute) + str(i) + "int"])
-                intermRequests.append(current_requests)
-            for i in range(len(requests)):
-                req = requests[i]
-                Lecture.push(connection, *req)
-                reqInt = intermRequests[i]
-                UserLecture.push(connection, *reqInt, Lecture.last(connection), User.last(connection))
+        """, tuple(values)).fetchall()
+        return render_template('submitted_report.html', rows=data, table_class=my_class)
 
-        connection.commit()
-        connection.close()
-        flash(f'{my_class.stringRepresentation} created successfully!', 'success')
-        return redirect(f'/{table_name}')
-    if my_class.table_name == "users":
-        return render_template('add_multiple_files.html', model=my_class, fkVars=fkVarsDict,
-                               multipleAddClass=Lecture, fkAddVars=fkVarsDictMultiple,
-                               intermediateClass=UserLecture, entriesAmount=entriesAmount)
-    return render_template('create.html', model=my_class, fkVars=fkVarsDict)
-
-
-@app.route('/edit/users/<int:element_id>/<int:entriesAmount>', methods=('GET', 'POST'))
-def editMult(element_id, entriesAmount):
-    table_name = "users"
-    my_class = classAdresses[table_name]  # classAdresses mapping should be defined
-    requestedClasses = connected_classes(my_class)  # connected_classes function should be defined
-    fkVarsDict = {}
-
-    for Class in requestedClasses:
-        fkVarsDict.update(
-            {Class: meaningfulClassValues(Class)})  # meaningfulClassValues function should be defined
-
-    requestedClassesMultiple = connected_classes(Lecture)
-    fkVarsDictMultiple = {}
-    for Class in requestedClassesMultiple:
-        fkVarsDictMultiple.update({Class: meaningfulClassValues(Class)})
-
-    connection = get_db_connection()  # get_db_connection function should be defined
-    existing_user = my_class.get(connection, element_id)
-    ID = existing_user["id"]
-    records = lecturesByID(ID)
-    existing_lectures = Lecture.get(connection, element_id)
-    for rec in records:
-        print(rec)
-    if request.method == 'POST':
-        values = []
-        for attribute in my_class.attributes:
-            values.append(request.form[str(attribute)])
-        my_class.update(connection, element_id, *values)  # Assuming push method takes ID for update
-
-        if my_class.table_name == "users":
-            lecture_requests = []
-            userlecture_requests = []
-
-            for rec in records:
-                print("-----------------------------------------------")
-                print(rec)
-                lecture_data = [request.form.get(str(attribute) + 'M' + str(rec["id"])) for attribute in Lecture.attributes]
-                userlecture_data = [request.form.get(str(attribute) + 'M' + str(rec["id"])) + "int"
-                                    for attribute in UserLecture.attributes
-                                    if not isinstance(attribute, foreignKey)]
-                lecture_requests.append(lecture_data)
-                userlecture_requests.append(userlecture_data)
-
-            for i in range(entriesAmount):
-                lecture_data = [request.form.get(str(attribute) + str(i)) for attribute in Lecture.attributes]
-                userlecture_data = [request.form.get(str(attribute) + str(i) + "int")
-                                    for attribute in UserLecture.attributes
-                                    if not isinstance(attribute, foreignKey)]
-                lecture_requests.append(lecture_data)
-                userlecture_requests.append(userlecture_data)
-
-            for i in range(len(lecture_requests)):
-                Lecture.push(connection, *lecture_requests[i])
-                UserLecture.push(connection, *userlecture_requests[i], Lecture.last(connection), User.last(connection))
-
-        connection.commit()
-        connection.close()
-        flash(f'{my_class.stringRepresentation} updated successfully!', 'success')
-        return redirect('/users')  # replace 'users' with the name of route showing user list
-
-    # These methods are assumed - replace them with the right method to fetch data
-
-    ULs = UserLecture.select(connection)
-    for ul in ULs:
-        for key in ul:
-            key = str(key)
-    connection.commit()
-    return render_template('edit_multiple_files.html', model=my_class, fkVars=fkVarsDict,
-                            multipleAddClass=Lecture, fkAddVars=fkVarsDictMultiple,
-                            intermediateClass=UserLecture, entriesAmount=entriesAmount,
-                            record=existing_user, lectures=existing_lectures, records=records, addClass=ULs)
+    return render_template('report.html', rows=data, table_class=my_class)

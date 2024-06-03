@@ -1,29 +1,33 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %}Users{% endblock %}</h1>
+    <h1>{% block title %} {{ table_class.stringRepresentation }}s {% endblock %}</h1>
+    {% set id = table_class | get_id %}
     <table class="table">
       <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">ID</th>
-          <th scope="col">Name</th>
-          <th scope="col">Surname</th>
-          <th scope="col">Country</th>
-          <th scope="col">Gender</th>
-          <th scope="col">Interaction</th>
+          {% for attribute in table_class | get_title %}
+            <th scope="col">{{ attribute }}</th>
+          {% endfor %}
+            <th scope="col"></th>
+            <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
-      {% for user in users %}
+      {% for row in rows %}
         <tr>
-            <th scope="row">1</th>
-            <td>{{ user.id }}</td>
-            <td>{{user.name}}</td>
-            <td>{{user.surname}}</td>
-            <td>{{user.name}}</td>
-            <td>{{user.name}}</td>
-            <td><a href = "{{ url_for('delete', post_id=user.id) }}">Delete</a></td>
+            <td>{{ loop.index }}</td>
+            <td>{{ row[id] }}</td>
+            {% for attribute in table_class | get_attributes %}
+                {% if special_attributes[attribute] is defined %}
+                    <td>{{special_attributes[attribute][row[attribute | str]] | str}}</td>
+                {% else %}
+                    <td>{{ row[attribute | str] }}</td>
+                {% endif %}
+            {% endfor %}
+            <td><a href="{{ url_for('edit', table_name = table_class | table_name, element_id=row['id']) }}">Edit</a></td>
+            <td><a href="{{ url_for('delete', table_name = table_class | table_name, element_id=row['id']) }}" class="delete-link">Delete</a></td>
           </tr>
       {% endfor %}
       </tbody>

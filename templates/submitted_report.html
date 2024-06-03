@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!--    Table with data-->
+    <h1>{% block title %} Report {% endblock %}</h1>
+    {% set id = table_class | get_id %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          {% for attribute in table_class | get_title %}
+            <th scope="col">{{ attribute }}</th>
+          {% endfor %}
+            <th scope="col">Course</th>
+            <th scope="col"> User's lectures amount in course </th>
+            <th scope="col"> Selected completion status percentage </th>
+            <th scope="col"> Selected "starred" status percentage </th>
+            <th scope="col"> Amount of lectures, which were started in the selected year </th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for row in rows %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            {% for el in row %}
+                <td> {{ el }} </td>
+            {% endfor %}
+          </tr>
+      {% endfor %}
+        <tr>
+            {% for counter in range(9)%}
+                        <td></td>
+            {% endfor %}
+            <td>Total records:</td>
+            <td>{{ rows | len}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+{% endblock %}

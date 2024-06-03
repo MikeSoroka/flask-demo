@@ -9,6 +9,7 @@ CREATE TABLE users (
     surname VARCHAR(255) NOT NULL,
     country VARCHAR(255) NOT NULL,
     fk_GENDERid INTEGER REFERENCES genders(id)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE courses (
@@ -23,12 +24,14 @@ CREATE TABLE lectures (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title VARCHAR(255) NOT NULL,
     fk_COURSEid INTEGER REFERENCES courses(id)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE user_lectures (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     is_completed BOOLEAN NOT NULL,
     is_starred BOOLEAN NOT NULL,
+    start_date DATE NOT NULL,
     fk_LECTUREid INTEGER REFERENCES lectures(id),
     fk_USERid INTEGER REFERENCES users(id)
 );

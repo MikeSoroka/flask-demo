@@ -1,79 +1,111 @@
--- Insert genders
-INSERT INTO genders (gender) VALUES
-    ('Male'),
-    ('Female'),
-    ('Non-binary'),
-    ('Prefer not to say');
+-- Insert data into genders table
+INSERT INTO genders (gender) VALUES ('Male');
+INSERT INTO genders (gender) VALUES ('Female');
+INSERT INTO genders (gender) VALUES ('Non-binary');
+INSERT INTO genders (gender) VALUES ('Other');
+INSERT INTO genders (gender) VALUES ('Prefer not to say');
+INSERT INTO genders (gender) VALUES ('Genderqueer');
+INSERT INTO genders (gender) VALUES ('Two-Spirit');
+INSERT INTO genders (gender) VALUES ('Agender');
+INSERT INTO genders (gender) VALUES ('Bigender');
+INSERT INTO genders (gender) VALUES ('Pangender');
 
--- Insert users
-INSERT INTO users (name, surname, country, fk_GENDERid) VALUES
-    ('John', 'Doe', 'USA', 1),
-    ('Alice', 'Smith', 'UK', 2),
-    ('Mohammed', 'Ali', 'Egypt', 1),
-    ('Emma', 'Johnson', 'Canada', 2),
-    ('Chen', 'Wei', 'China', 1),
-    ('Maria', 'Garcia', 'Spain', 2),
-    ('Ahmed', 'Khan', 'Pakistan', 1),
-    ('Lena', 'Müller', 'Germany', 2),
-    ('Yusuf', 'Abdul', 'Nigeria', 1),
-    ('Sophia', 'Kim', 'South Korea', 2),
-    ('Diego', 'Lopez', 'Mexico', 1),
-    ('Aya', 'Sato', 'Japan', 2),
-    ('Anna', 'Novak', 'Russia', 2),
-    ('Ethan', 'Brown', 'Australia', 1),
-    ('Fatima', 'Mohamed', 'Saudi Arabia', 2),
-    ('Luca', 'Ricci', 'Italy', 1),
-    ('Leila', 'Silva', 'Brazil', 2),
-    ('Muhammad', 'Choi', 'Indonesia', 1),
-    ('Olivia', 'Lee', 'New Zealand', 2),
-    ('Omar', 'Gonzalez', 'Argentina', 1);
+-- Insert data into users table
+INSERT INTO users (name, surname, country, fk_GENDERid) VALUES ('John', 'Doe', 'USA', 1);
+INSERT INTO users (name, surname, country, fk_GENDERid) VALUES ('Jane', 'Smith', 'UK', 2);
+INSERT INTO users (name, surname, country, fk_GENDERid) VALUES ('Alex', 'Johnson', 'Canada', 3);
+INSERT INTO users (name, surname, country, fk_GENDERid) VALUES ('Emily', 'Davis', 'Australia', 2);
+INSERT INTO users (name, surname, country, fk_GENDERid) VALUES ('Michael', 'Brown', 'New Zealand', 1);
+INSERT INTO users (name, surname, country, fk_GENDERid) VALUES ('Sarah', 'Miller', 'Ireland', 2);
+INSERT INTO users (name, surname, country, fk_GENDERid) VALUES ('Chris', 'Wilson', 'USA', 4);
+INSERT INTO users (name, surname, country, fk_GENDERid) VALUES ('Pat', 'Taylor', 'Canada', 5);
+INSERT INTO users (name, surname, country, fk_GENDERid) VALUES ('Jordan', 'Anderson', 'UK', 6);
+INSERT INTO users (name, surname, country, fk_GENDERid) VALUES ('Morgan', 'Thomas', 'Australia', 7);
 
--- Insert courses
-INSERT INTO courses (name, approximate_duration, overview, price) VALUES
-    ('Introduction to Programming', 30, 'Learn the basics of programming', 49.99),
-    ('Web Development Fundamentals', 45, 'Build your first website', 59.99),
-    ('Data Science Essentials', 60, 'Discover the power of data analysis', 69.99),
-    ('Graphic Design Basics', 40, 'Create stunning visuals', 54.99),
-    ('Language Learning: Spanish', 50, 'Master the Spanish language', 64.99),
-    ('Finance for Beginners', 35, 'Understand the basics of finance', 44.99),
-    ('Photography 101', 55, 'Capture beautiful moments', 74.99),
-    ('Fitness and Nutrition', 40, 'Get in shape and eat healthy', 59.99),
-    ('Introduction to Psychology', 50, 'Explore the human mind', 69.99),
-    ('Music Theory Fundamentals', 45, 'Learn the basics of music theory', 54.99);
+-- Insert data into courses table
+INSERT INTO courses (name, approximate_duration, overview, price) VALUES ('Introduction to Programming', 30, 'Learn the basics of programming.', 49.99);
+INSERT INTO courses (name, approximate_duration, overview, price) VALUES ('Advanced Databases', 45, 'Deep dive into database management systems.', 99.99);
+INSERT INTO courses (name, approximate_duration, overview, price) VALUES ('Web Development', 40, 'Full-stack web development course.', 79.99);
+INSERT INTO courses (name, approximate_duration, overview, price) VALUES ('Machine Learning', 50, 'Comprehensive machine learning course.', 119.99);
+INSERT INTO courses (name, approximate_duration, overview, price) VALUES ('Data Science', 60, 'Complete data science bootcamp.', 129.99);
+INSERT INTO courses (name, approximate_duration, overview, price) VALUES ('Cybersecurity', 35, 'Learn how to protect systems and data.', 89.99);
+INSERT INTO courses (name, approximate_duration, overview, price) VALUES ('Cloud Computing', 55, 'Introduction to cloud services.', 109.99);
+INSERT INTO courses (name, approximate_duration, overview, price) VALUES ('Mobile App Development', 45, 'Create mobile applications from scratch.', 99.99);
+INSERT INTO courses (name, approximate_duration, overview, price) VALUES ('DevOps Practices', 50, 'Learn DevOps methodologies and practices.', 119.99);
+INSERT INTO courses (name, approximate_duration, overview, price) VALUES ('Blockchain Technology', 60, 'Understanding blockchain and its applications.', 129.99);
 
--- Insert lectures
-INSERT INTO lectures (title, fk_COURSEid) VALUES
-    ('Variables and Data Types', 1),
-    ('HTML Basics', 2),
-    ('Introduction to Data Science', 3),
-    ('Introduction to Graphic Design', 4),
-    ('Greetings and Introductions', 5),
-    ('Understanding Interest Rates', 6),
-    ('Camera Settings', 7),
-    ('Nutrition Basics', 8),
-    ('The Mind and Behavior', 9),
-    ('Notes and Scales', 10);
+-- Insert data into lectures table
+INSERT INTO lectures (title, fk_COURSEid) VALUES ('Programming Basics', 1);
+INSERT INTO lectures (title, fk_COURSEid) VALUES ('Control Structures', 1);
+INSERT INTO lectures (title, fk_COURSEid) VALUES ('Database Design', 2);
+INSERT INTO lectures (title, fk_COURSEid) VALUES ('SQL Queries', 2);
+INSERT INTO lectures (title, fk_COURSEid) VALUES ('HTML & CSS', 3);
+INSERT INTO lectures (title, fk_COURSEid) VALUES ('JavaScript Fundamentals', 3);
+INSERT INTO lectures (title, fk_COURSEid) VALUES ('Introduction to ML', 4);
+INSERT INTO lectures (title, fk_COURSEid) VALUES ('Supervised Learning', 4);
+INSERT INTO lectures (title, fk_COURSEid) VALUES ('Data Analysis', 5);
+INSERT INTO lectures (title, fk_COURSEid) VALUES ('Visualization', 5);
 
--- Insert user_lectures
-INSERT INTO user_lectures (is_completed, is_starred, fk_LECTUREid, fk_USERid) VALUES
-    (TRUE, TRUE, 1, 1),
-    (TRUE, FALSE, 2, 1),
-    (TRUE, TRUE, 3, 1),
-    (TRUE, FALSE, 1, 2),
-    (TRUE, TRUE, 4, 2),
-    (TRUE, FALSE, 5, 2),
-    (TRUE, TRUE, 1, 3),
-    (TRUE, FALSE, 2, 3),
-    (TRUE, TRUE, 3, 3),
-    (TRUE, FALSE, 4, 3),
-    (TRUE, TRUE, 1, 4),
-    (TRUE, FALSE, 2, 4),
-    (TRUE, TRUE, 3, 4),
-    (TRUE, FALSE, 4, 4),
-    (TRUE, TRUE, 1, 5),
-    (TRUE, FALSE, 2, 5),
-    (TRUE, TRUE, 3, 5),
-    (TRUE, FALSE, 4, 5),
-    (TRUE, TRUE, 1, 6),
-    (TRUE, FALSE, 2, 6);
--- Add more records as needed
+-- Insert data into user_lectures table
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2023-01-01', 1, 1);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2023-01-05', 2, 2);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 0, '2023-02-01', 3, 3);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 1, '2023-02-10', 4, 4);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2023-03-01', 5, 5);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2023-03-15', 6, 6);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 0, '2023-04-01', 7, 7);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 1, '2023-04-20', 8, 8);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2023-05-01', 9, 9);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2023-05-10', 10, 10);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2023-06-01', 1, 2);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2023-06-15', 2, 3);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 0, '2023-07-01', 3, 4);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 1, '2023-07-10', 4, 5);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2023-08-01', 5, 6);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2023-08-15', 6, 7);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 0, '2023-09-01', 7, 8);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 1, '2023-09-10', 8, 9);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2023-10-01', 9, 10);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2023-10-10', 10, 1);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2023-11-01', 1, 3);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2023-11-10', 2, 4);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 0, '2023-12-01', 3, 5);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 1, '2023-12-10', 4, 6);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2024-01-01', 5, 7);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2024-01-10', 6, 8);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 0, '2024-02-01', 7, 9);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 1, '2024-02-10', 8, 10);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2024-03-01', 9, 1);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2024-03-10', 10, 2);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2024-04-01', 1, 3);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2024-04-10', 2, 4);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 0, '2024-05-01', 3, 5);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 1, '2024-05-10', 4, 6);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2024-06-01', 5, 7);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2024-06-10', 6, 8);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 0, '2024-07-01', 7, 9);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 1, '2024-07-10', 8, 10);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2024-08-01', 9, 1);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2024-08-10', 10, 2);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2024-09-01', 1, 3);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2024-09-10', 2, 4);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 0, '2024-10-01', 3, 5);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 1, '2024-10-10', 4, 6);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2024-11-01', 5, 7);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2024-11-10', 6, 8);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 0, '2024-12-01', 7, 9);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 1, '2024-12-10', 8, 10);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2025-01-01', 9, 1);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2025-01-10', 10, 2);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2025-02-01', 1, 3);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2025-02-10', 2, 4);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 0, '2025-03-01', 3, 5);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 1, '2025-03-10', 4, 6);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2025-04-01', 5, 7);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2025-04-10', 6, 8);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 0, '2025-05-01', 7, 9);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 1, '2025-05-10', 8, 10);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2025-06-01', 9, 1);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2025-06-10', 10, 2);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (1, 1, '2025-07-01', 1, 3);
+INSERT INTO user_lectures (is_completed, is_starred, start_date, fk_LECTUREid, fk_USERid) VALUES (0, 0, '2025-07-10', 2, 4);
