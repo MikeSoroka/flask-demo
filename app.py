@@ -52,7 +52,7 @@ def tableFkToDict(table_name, rows):
         user_dict.update({foreignKey("fk_USERid", User): {}})
         for ID in list(name_dict.values())[0].keys():
             user_dict[foreignKey("fk_USERid", User)].update({ID: list(name_dict.values())[0][ID] + " " +
-                                                                 list(surname_dict.values())[0][ID]})
+                                                                list(surname_dict.values())[0][ID]})
         return lect_dict | user_dict
     elif (table_name == "users"):
         genders_dict = fkToDict(foreignKey("fk_GENDERid", Gender), rows, "gender")

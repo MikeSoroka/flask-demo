@@ -1,3 +1,8 @@
+class Column():
+    def __init__(self, name, type):
+        self.name = name
+        self.type = type
+
 class limitedVariantsDataEntry():
     def __init__(self, name, variants):
         self.name = name
@@ -18,6 +23,7 @@ class foreignKey():
 
     def __hash__(self):
         return hash(self.__key())
+    
     @property
     def Class(self):
         return self.foreignClass
