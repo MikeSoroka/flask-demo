@@ -1,7 +1,8 @@
 # flask-demo
 
-A small course-management web app built to practise wiring a relational database to a web
-application: Flask + SQLite, server-rendered with Jinja and Bootstrap, no ORM.
+Final project for the Databases course at KTU (first year). A small course-management web app
+built to practise wiring a relational database to a web application: Flask + SQLite,
+server-rendered with Jinja and Bootstrap, no ORM.
 
 It manages users, courses, lectures and which lectures each user has taken, with generic
 create / edit / delete pages generated from a lightweight model layer and a filterable
