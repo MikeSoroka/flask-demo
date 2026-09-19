@@ -1,7 +1,3 @@
-# class Meta(type):
-#     def __new__(cls, name, bases, attrs):
-#         attrs['table_name'] = name.upper() + "S"
-#         return super().__new__(cls, name, bases, attrs)
 from data_entries import *
 
 
@@ -50,14 +46,13 @@ class DB_class():
 class Gender(DB_class):
     table_name = "genders"
     stringRepresentation = "Gender"
-    attibutes = ("gender",)
+    attributes = ("gender",)
 
 class User(DB_class):
     table_name = "users"
     stringRepresentation = "User"
     attributes = ("name", "surname", "country",
                   foreignKey("fk_GENDERid", Gender))
-#user's amount of lectures in a given course
 class Course(DB_class):
     table_name = "courses"
     stringRepresentation = "Course"

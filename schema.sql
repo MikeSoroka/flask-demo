@@ -32,6 +32,8 @@ CREATE TABLE user_lectures (
     is_completed BOOLEAN NOT NULL,
     is_starred BOOLEAN NOT NULL,
     start_date DATE NOT NULL,
-    fk_LECTUREid INTEGER REFERENCES lectures(id),
+    fk_LECTUREid INTEGER REFERENCES lectures(id)
+    ON DELETE CASCADE,
     fk_USERid INTEGER REFERENCES users(id)
+    ON DELETE CASCADE
 );

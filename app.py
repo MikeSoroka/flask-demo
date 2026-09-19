@@ -1,10 +1,8 @@
-import json
+import os
 import sqlite3
 from flask import Flask, render_template, request, url_for, flash, redirect
 from DB_Classes import *
 from data_entries import *
-
-app = Flask(__name__)
 
 usersTitle = ["ID", "Name", "Surname", "Country", "Gender"]
 lecturesTitle = ["ID", "Title", "Course"]
@@ -36,8 +34,7 @@ def ULByIDs(userID, lectureID, db='database.db'):
     userLectures = UserLecture.select(connection)
     for userLecture in userLectures:
         if userLecture["fk_USERid"] == userID and userLecture["fk_Lectureid"] == lectureID:
-            return(Lecture.get(connection, userLecture["fk_Lectureid"]))
-#return {}
+            return Lecture.get(connection, userLecture["fk_Lectureid"])
 
 
 
@@ -58,7 +55,7 @@ def tableFkToDict(table_name, rows):
         genders_dict = fkToDict(foreignKey("fk_GENDERid", Gender), rows, "gender")
         return genders_dict
 
-    elif (table_name == "courses"):
+    elif (table_name == "courses" or table_name == "genders"):
         return {}
 
     elif (table_name == "lectures"):
@@ -122,11 +119,12 @@ def tableNameToClassName(link):
 def get_db_connection(db='database.db'):
     connection = sqlite3.connect(db)
     connection.row_factory = sqlite3.Row
+    connection.execute("PRAGMA foreign_keys = ON")
     return connection
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'smth'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev')
 
 
 def attributePossibleValues(currentClass, attribute):
@@ -208,6 +206,8 @@ def getTitle(myClass):
         return lecturesTitle
     elif myClass == UserLecture:
         return userLecturesTitle
+    elif myClass == Gender:
+        return gendersTitle
 
 
 @app.template_filter('get_id')
@@ -225,17 +225,11 @@ def show(table_name):
     connection = get_db_connection()
     my_class = classAdresses[table_name]
     rows = my_class.select(connection)
-    special_attributes = {}
-    # foreignKey("fk_USERid", User))
-    if isinstance(my_class, User):
-        return render_template('users.html', rows=rows, table_class=my_class,
-                           special_attributes=tableFkToDict(my_class.table_name, rows))
     return render_template('table.html', rows=rows, table_class=my_class,
                            special_attributes=tableFkToDict(my_class.table_name, rows))
 
 
 @app.route('/create/<string:table_name>', methods=('GET', 'POST'))
-# those lines post all required data in user and rendering create.html
 def create(table_name):
     my_class = classAdresses[table_name]
     requestedClasses = connected_classes(my_class)
@@ -257,7 +251,6 @@ def create(table_name):
 
 
 @app.route('/edit/<string:table_name>/<int:element_id>', methods=('GET', 'POST'))
-# those lines post all required data in user and rendering create.html
 def edit(table_name, element_id):
     connection = get_db_connection()
     my_class = classAdresses[table_name]
@@ -268,7 +261,6 @@ def edit(table_name, element_id):
         fkVarsDict.update({Class: meaningfulClassValues(Class)})
     if request.method == 'POST':
         values = []
-        # values[my_class.id] = request.form.get('id')
         for attribute in my_class.attributes:
             values.append(request.form[str(attribute)])
         my_class.update(connection, element_id, *values)
@@ -283,7 +275,6 @@ def edit(table_name, element_id):
 def delete(table_name, element_id):
     connection = get_db_connection()
     my_class = classAdresses[table_name]
-    record = my_class.get(connection, element_id)
     my_class.delete(connection, element_id)
     connection.commit()
     connection.close()
@@ -310,16 +301,8 @@ def report():
         GROUP BY users.id, lectures.id
         ORDER BY users.id
     """).fetchall()
-    #data.fetchall()
-    for row in data:
-        for key in row:
-            print(key)
-
 
     my_class = classAdresses[table_name]
-    rows = my_class.select(connection)
-    special_attributes = {}
-    # foreignKey("fk_USERid", User))
     if request.method == 'POST':
         values = []
         for attribute in ["is_completed", "is_starred", "age"]:
@@ -359,3 +342,7 @@ def report():
         return render_template('submitted_report.html', rows=data, table_class=my_class)
 
     return render_template('report.html', rows=data, table_class=my_class)
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
