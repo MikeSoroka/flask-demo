@@ -7,6 +7,8 @@ It manages users, courses, lectures and which lectures each user has taken, with
 create / edit / delete pages generated from a lightweight model layer and a filterable
 aggregate report.
 
+![User lectures table](docs/img/user-lectures.png)
+
 ## Running
 
 ```bash
@@ -46,6 +48,8 @@ table) or a `limitedVariantsDataEntry` (rendered as a dropdown of allowed values
 `table.html`, `create.html` and `edit.html` templates serve every table by inspecting the model
 through Jinja filters, so adding a table means adding a class and a row in `classAdresses`.
 
+![Edit form with foreign-key dropdowns](docs/img/edit-user-lecture.png)
+
 The base `DB_class` implements `select`, `get`, `push`, `update` and `delete` with
 parameterised SQL.
 
@@ -55,6 +59,8 @@ parameterised SQL.
 starred status and start year and returns, per user and course: number of lectures, share of
 lectures matching the selected completion and starred status, and how many lectures were started
 in the chosen year — a single `GROUP BY` query with conditional aggregates.
+
+![Submitted report](docs/img/report.png)
 
 ## Notes
 
